@@ -27,20 +27,36 @@
   \ClassWarning{ustcthesis}{#1}%
 }
 
-% 检查 \LaTeXe{} kernel 版本
-\@ifl@t@r\fmtversion{2017/04/15}{}{
-  \ustc@error{%
-    TeX Live 2017 or later version is required to compile this document%
+% 2020/10/01 \IfFormatAtLeastTF
+\prg_new_conditional:Npnn \ustc_if_format_at_least:n #1 { T , F , TF }
+  {
+    \@ifl@t@r \fmtversion {#1}
+      { \prg_return_true: }
+      { \prg_return_false: }
   }
-}
+
+\prop_gput:Nnn \g_msg_module_type_prop { ustcthesis } { Class }
+
+\msg_new:nnn { ustcthesis } { latex-too-old }
+  {
+    TeX~ Live~ 2017~ or~ later~ version~ is~ required~ to~ compile~ this~
+    document.
+  }
+
+% 检查 LaTeX2e kernel 版本
+\ustc_if_format_at_least:nF { 2017/04/15 }
+  { \msg_fatal:nn { ustcthesis } { latex-tool-old } }
+
 
 % 检查编译引擎，要求使用 XeLaTeX 或 LuaLaTeX。
-\RequirePackage{iftex}
-\ifXeTeX\else
-  \ifLuaTeX\else
-    \ustc@error{XeLaTeX or LuaLaTeX is required to compile this document}
-  \fi
-\fi
+\msg_new:nnn { ustcthesis } { incompatible-engine }
+  { XeLaTeX~ or~ LuaLaTeX~ is~ required~ to~ compile~ this~ document. }
+
+\sys_if_engine_xetex:F
+  {
+    \sys_if_engine_luatex:F
+      { \msg_fatal:nn { ustcthesis } { incompatible-engine } }
+  }
 
 
 % \subsection{处理选项}
@@ -1034,7 +1050,7 @@
     UprightFont    = *-Regular,
   ]%
 }
-\ExplSyntaxOff
+\ExplSyntaxOn
 
 % Fandol 字体。
 \newcommand\ustc@set@cjk@font@fandol{%
