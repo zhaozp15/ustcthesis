@@ -11,8 +11,13 @@
 %
 
 \NeedsTeXFormat{LaTeX2e}[2017/04/15]
-\newcommand\ustcthesisversion{v3.3.1}
-\ProvidesClass{ustcthesis}[2021/12/10 {\ustcthesisversion} USTC thesis template]
+
+\RequirePackage{expl3}
+\RequirePackage{xparse}
+
+\def\ustcthesisversion{3.3.1}
+\ProvidesExplClass {ustcthesis} {2021-12-10} {\ustcthesisversion}
+  {USTC thesis template}
 
 % 报错和警告
 \newcommand\ustc@error[1]{%
@@ -707,6 +712,7 @@
 \fi
 
 % Times New Roman + Arial
+\ExplSyntaxOff
 \newcommand\ustc@set@font@times{%
   \setmainfont{Times New Roman}%
   \setsansfont{Arial}%
@@ -716,6 +722,7 @@
     \setmonofont{Courier New}[Scale = MatchLowercase]%
   \fi
 }
+\ExplSyntaxOn
 
 % TeX Gyre Termes
 \newcommand\ustc@set@font@termes{%
@@ -955,6 +962,7 @@
 }
 
 % macOS 的华文字体。
+\ExplSyntaxOff
 \newcommand\ustc@set@cjk@font@mac{%
   \defaultCJKfontfeatures{}%
   \setCJKmainfont{Songti SC}[
@@ -987,9 +995,11 @@
     BoldFont       = * Bold,
   ]%
 }
+\ExplSyntaxOn
 
 % 思源字体。
 % 注意 Noto CJK 的 regular 字重名字不带“Regular”。
+\ExplSyntaxOff
 \newcommand\ustc@set@cjk@font@noto{%
   \defaultCJKfontfeatures{}%
   \setCJKmainfont{Noto Serif CJK SC}[
@@ -1024,6 +1034,7 @@
     UprightFont    = *-Regular,
   ]%
 }
+\ExplSyntaxOff
 
 % Fandol 字体。
 \newcommand\ustc@set@cjk@font@fandol{%
@@ -2643,6 +2654,7 @@
 % \url{https://www.zhihu.com/question/46618031} 和
 % \url{https://tex.stackexchange.com/a/40363/82731}。
 %    \begin{macrocode}
+\ExplSyntaxOff
 \patchcmd{\@addtocurcol}%
   {\vskip \intextsep}%
   {\edef\save@first@penalty{\the\lastpenalty}\unpenalty
@@ -2669,6 +2681,7 @@
   {}{\ustc@patch@error{\@addtocurcol}}
 \patchcmd{\@getpen}{\@M}{\@Mi}
   {}{\ustc@patch@error{\@getpen}}
+\ExplSyntaxOn
 
 % 新定义了 \cs{note} 来生成图表的附注。
 % 如果用 \cs{caption} 生成图表的附注会导致图表的序号有误；
@@ -2710,6 +2723,7 @@
 
 \PassOptionsToPackage{compress}{natbib}
 
+\ExplSyntaxOff
 \AtEndOfPackageFile*{natbib}{
   % 定义几种引用文献的标注样式。
   \newcommand\bibstyle@super{\bibpunct{[}{]}{,}{s}{,}{\textsuperscript{,}}}
@@ -3016,6 +3030,7 @@
   \renewcommand\@biblabel[1]{[#1]\hfill}
   \setlength{\bibhang}{2\ccwd}
 }
+\ExplSyntaxOn
 
 
 % biblatex 宏包的配置
@@ -3313,6 +3328,7 @@
 
 % \subsubsection{\pkg{siunitx} 宏包}
 
+\ExplSyntaxOff
 \AtEndOfPackageFile*{siunitx}{
   \newcommand\ustc@set@siunitx@language{%
     \ifustc@language@chinese
@@ -3332,6 +3348,7 @@
   \ustc@set@siunitx@language
   \ustc@option@hook{language}{\ustc@set@siunitx@language}
 }
+\ExplSyntaxOn
 
 % \subsubsection{\pkg{chapterbib} 宏包}
 

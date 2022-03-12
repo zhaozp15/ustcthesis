@@ -8,7 +8,7 @@ testsuppdir = "./test/support"
 demofiles = {"main.tex", "bib", "chapters"}
 installfiles = {"*.cls", "*.bst", "*.bbx", "*.cbx", "figures"}
 sourcefiles = {"*.cls", "*.bst", "*.bbx", "*.cbx", "figures"}
-tagfiles = {"*.cls", "ustcthesis-doc.tex", "CHANGELOG.md", "main.tex"}
+tagfiles = {"*.cls", "ustcthesis-doc.tex", "CHANGELOG.md"}
 
 checkengines = {"xetex"}
 stdengine = "xetex"
@@ -30,37 +30,33 @@ typesetopts = "-file-line-error -halt-on-error -interaction=nonstopmode"
 lvtext = ".tex"
 
 function update_tag(file, content, tagname, tagdate)
+  tagname = string.gsub(tagname, "^v", "")
   local url = "https://github.com/ustctug/ustcthesis"
-  local date = string.gsub(tagdate, "%-", "/")
 
   if string.match(file, "%.cls$") then
-    if string.match(content, "\\newcommand\\ustcthesisversion{v[0-9.]+}") then
-      content = string.gsub(content, "\\newcommand\\ustcthesisversion{v[0-9.]+",
-      "\\newcommand\\ustcthesisversion{" .. tagname)
-    end
+    content = string.gsub(content, "\\def\\ustcthesisversion{[^}]*}",
+    "\\def\\ustcthesisversion{" .. tagname .. "}" )
 
-    if string.match(content, "\\ProvidesClass{ustcthesis}%[%d%d%d%d/%d%d/%d%d") then
-      content = string.gsub(content, "\\ProvidesClass{ustcthesis}%[%d%d%d%d/%d%d/%d%d",
-        "\\ProvidesClass{ustcthesis}[" .. date)
-    end
+    content = string.gsub(content,
+      "\\ProvidesExplClass {ustcthesis} {[^}]*} {[^}]*}",
+      "\\ProvidesExplClass {ustcthesis} {" .. tagdate .. "} {\\ustcthesisversion}")
 
-  elseif string.match(file, "%-doc.tex") then
-    if string.match(content, "\\date{v[0-9.]+\\qquad %d%d%d%d%-%d%d%-%d%d}") then
-      content = string.gsub(content, "v[0-9.]+\\qquad %d%d%d%d%-%d%d%-%d%d",
-        tagname .. "\\qquad " .. tagdate)
-    end
+  elseif string.match(file, "%-doc%.tex$") then
+    content = string.gsub(content,
+      "\\date{.*\\qquad %d%d%d%d%-%d%d%-%d%d}",
+      "\\date{v" .. tagname .. " \\qquad " .. tagdate .. "}")
 
   elseif string.match(file, "CHANGELOG.md") then
-    local previous = string.match(content, "/compare/(.*)%.%.%.HEAD")
+    local previous = string.match(content, "/compare/v(.*)%.%.%.HEAD")
 
     if tagname == previous then return content end
     content = string.gsub(content,
       "## %[Unreleased%]",
-      "## [Unreleased]\n\n## [" .. tagname .."] - " .. tagdate)
+      "## [Unreleased]\n\n## [v" .. tagname .."] - " .. tagdate)
     content = string.gsub(content,
       previous .. "%.%.%.HEAD",
-      tagname .. "...HEAD\n[" .. tagname .. "]: " .. url .. "/compare/"
-        .. previous .. "..." .. tagname)
+      tagname .. "...HEAD\n[v" .. tagname .. "]: " .. url ..
+      "/compare/v" .. previous .. "..." .. "v" .. tagname)
   end
   return content
 end
