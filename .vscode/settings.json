@@ -41,5 +41,6 @@
             ],
             "env": {}
         },
-    ]
+    ],
+    "latex-workshop.latex.autoBuild.run": "never"
 }

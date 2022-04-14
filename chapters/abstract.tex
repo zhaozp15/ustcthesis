@@ -2,34 +2,42 @@
 
 \ustcsetup{
   keywords = {
-    中国科学技术大学, 学位论文, \LaTeX{} 模板, 学士, 硕士, 博士
+    二值神经网络；网络量化；模型压缩
   },
   keywords* = {
-    University of Science and Technology of China (USTC), Thesis,
-    \LaTeX{} Template, Bachelor, Master, PhD
+    Binary Neural Network; Network Quantization; Model Compression
   },
 }
 
 \begin{abstract}
-  摘要分中文和英文两种，中文在前，英文在后，博士论文中文摘要一般 800～1500 个汉字，硕士论文中文摘要一般 500～1000 个汉字。
-  英文摘要的篇幅参照中文摘要。
+  随着深度学习技术的发展，神经网络在计算机视觉领域的应用越来越广泛。但是神经网络模型的存储和计算开销较大，不利于部署在移动端和边缘端的资源受限设备上。研究人员提出模型压缩方法解决上述问题。作为一种极致的模型压缩方法，神经网络二值化将网络中的激活值和权重量化为1位表示，用同或运算和位计数运算代替卷积时的浮点乘法和加法运算，极大的降低了神经网络模型的计算开销。相对于单精度浮点表示，1位表示的权重可以减少32倍的模型存储空间。但是浮点特征转换为二值特征时会损失大量特征信息，显著降低了二值神经网络的特征表达能力，导致二值网络性能低于浮点网络。并且神经网络的二值化改变了模型拟合的函数空间，原有的针对浮点网络的结构设计可能不适合二值网络。本文从增强二值特征的角度出发，针对上述难点研究解决方法，取得以下成果：
 
-  关键词另起一行并隔行排列于摘要下方，左顶格，中文关键词间空一字或用分号“，”隔开，英文关键词之间用逗号“,”或分号“;”隔开。
+  （1）多二值特征图方法及其实现
 
-  中文摘要是论文内容的总结概括，应简要说明论文的研究目的、基本研究内容、研究方法或过程、结果和结论，突出论文的创新之处。
-  摘要应具有独立性和自明性，即不用阅读全文，就能获得论文必要的信息。
-  摘要中不宜使用公式、图表，不引用文献。
+  应用于图像领域的神经网络算法逐层提取特征图，特征图的信息容量决定了神经网络的特征提取能力。特征图元素数值大小表示了特征响应强度，特征图的二值化会严重破坏不同响应强度间的相对大小关系。本文提出多二值特征图方法，从一张浮点特征图提取多张不同的二值特征图，从不同角度提取响应强度相对关系，减少特征图二值化过程的信息损失。为了设置多特征图方法中的阈值，本文提出二值特征相似度评价指标，并设计了手工搜索和阈值参数迭代优化两种阈值设置方法。本文在ImageNet数据集上进行测试，验证了多二值特征图方法可以提高二值特征的利用率，提高二值网络性能。
 
-  中文关键词是为了文献标引工作从论文中选取出来用以表示全文主题内容信息的单词和术语，一般 3～8 个词，要求能够准确概括论文的核心内容。
+  （2）二值友好网络结构设计
+
+  二值网络相比浮点网络具有较高的结构敏感性，设计二值友好的网络结构可以明显提高二值网络特征解析能力。本文研究了二值网络对网络结构的需求，提出了针对二值网络的模块内网络层排布顺序。为了增强二值网络模型的函数拟合能力，本文设计了模块间的分段线性缩放函数，以增加极低的浮点计算量为代价显著提高二值网络的性能。实验表明本文提出的网络层顺序优于其他顺序，本文的模块间激活函数可以使ImageNet数据集上训练的网络精度提高1\%左右，验证了二值友好网络设计的有效性。
+
+  （3）基于特征增强的二值神经网络设计
+
+  本文将多二值特征图方法和二值友好网络结构设计结合，设计了MFNet系列二值神经网络。本文通过对网络各个组成部分的细致设计，极大的降低了网络中的浮点计算量。MFNet网络模块内部使用全二值卷积，没有浮点卷积。MFNet-L网络在ImageNet数据集上训练的Top-1网络精度高达71.5\%，在相近计算量的条件下超过了所有现有二值神经网络，进一步验证了本文多二值特征图方法和二值友好结构设计的有效性。
 \end{abstract}
 
 \begin{abstract*}
-  This is a sample document of USTC thesis \LaTeX{} template for bachelor,
-  master and doctor. The template is created by zepinglee and seisman, which
-  orignate from the template created by ywg. The template meets the
-  equirements of USTC thesis writing standards.
+  With the development of deep learning technology, neural networks are widely used in computer vision. However, neural networks has too big the storage and computing cost to be deployed on resource-constrained devices like mobile devices and edge devices. Model compression is proposed to solve the above difficulties. As an extreme model compression method, neural network binarization quantizes the activations ​​and weights in the network into 1-bit representation.Network binarization replaces the floating-point multiplication and addition operations during convolution with the XNOR operation and bit counting operation, which extremely reduces the computational cost of the neural network. Also 1-bit weights can reduce 32x model storage space. However, when floating-point features are converted into binary features, a large amount of feature information will be lost, which significantly reduces the feature expression ability of binary neural networks, resulting in lower performance of binary networks than floating-point networks. The binarization of neural networks changes the function space of the model, so the original structure designed for floating-point networks may not be suitable for the binary networks. From the perspective of enhancing binary features, this paper studies the solutions to the above difficulties, and achieves the following results:
 
-  This document will show the usage of basic commands provided by \LaTeX{} and
-  some features provided by the template. For more information, please refer to
-  the template document ustcthesis.pdf.
+  (1) Multi-feature method and its implementation
+
+  Image neural network algorithm extracts the feature map layer by layer, and the information capacity of the feature map determines the feature extraction ability of the neural network. The element value of feature maps represents the feature response intensity, and the binarization of the feature map will seriously destroy the relative magnitude relationship between different response intensities. In this paper, we propose multi-feature method, which extracts multiple different binary feature maps from one floating-point feature map. Multi-feature method extracts the relative relationship of response intensities from different angles to reduce the information loss in the feature map binarization process. In order to choose thresholds in the multi-feature method, we propose binary feature similarity to evaluate thresholds. We design two threshold setting methods, manual search and iterative optimization. We test our method on ImageNet dataset and verifies that the multi-feature method can improve the utilization of binary features as well as the performance of binary networks.
+
+  (2) Design of binary-friendly network structure
+
+  Compared with floating-point networks, binary networks have higher structural sensitivity. Designing a binary-friendly network structure can significantly improve the feature extracting ability of the binary network. In this paper, we study the requirement of binary networks, and propose a new arrangement order of the network layers in a block of binary networks. In order to enhance the function fitting ability, we design a piecewise linear scaling function using between blocks.This activation function can significantly improve the performance of binary networks at the cost of negligible floating-point computation. Experiments show that the network layer order proposed is better than any other orders, and the activation function proposed can improve the training accuracy on ImageNet dataset by about 1\%. Experiments verify the effectiveness of our binary-friendly structure design.
+
+  (3) Binary neural network design based on feature enhancement
+
+  In this paper, we propose a new binary network architecture called MFNet by combining the multi-feature method and the binary-friendly network structure design. We carefully design each component of the network to reduce floating-point calculations. Our MFNet has a full binary convolution architecture. d. The proposed MFNet outperforms all other binary networks  under the similar computing cost, it achieves 71.5\% top-1 accuracy on ImageNet dataset. The high performance of MFNet proves the efficiency of multi-feature method and binary-friendly structure design.
+
 \end{abstract*}
